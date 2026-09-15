@@ -1,0 +1,594 @@
+{
+  "name": "AI Tech Daily Brief",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 7
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -912,
+        -96
+      ],
+      "id": "b492322b-2f0c-46f7-a7d6-1cc8606be543",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://techcrunch.com/category/artificial-intelligence/feed/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -224,
+        -368
+      ],
+      "id": "6e7507ac-8625-46be-9bda-bfd1e0f4a0bc",
+      "name": "TechCrunch"
+    },
+    {
+      "parameters": {
+        "url": "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -224,
+        -512
+      ],
+      "id": "74e3e4c5-4e64-4d04-b3ce-7ce1f70f9a31",
+      "name": "The Verge — AI"
+    },
+    {
+      "parameters": {
+        "url": "https://www.technologyreview.com/topic/artificial-intelligence/feed/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -224,
+        -240
+      ],
+      "id": "5cda88a1-c79f-4e78-9991-a086b3dcb0aa",
+      "name": "MIT Technology Review — AI"
+    },
+    {
+      "parameters": {
+        "url": "https://feeds.arstechnica.com/arstechnica/index",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -224,
+        48
+      ],
+      "id": "fb7bd341-2821-42f4-8226-72f207fe42f6",
+      "name": "Ars Technica"
+    },
+    {
+      "parameters": {
+        "url": "https://openai.com/news/rss.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -224,
+        192
+      ],
+      "id": "c8e557eb-48d3-41a9-982b-6c5eebb9c2b9",
+      "name": "OpenAI News"
+    },
+    {
+      "parameters": {
+        "url": "https://blog.google/technology/ai/rss/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -224,
+        336
+      ],
+      "id": "d20732b3-c0d2-4738-b6ef-8229898a48f2",
+      "name": "Google AI Blog"
+    },
+    {
+      "parameters": {
+        "url": "https://huggingface.co/blog/feed.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -224,
+        -96
+      ],
+      "id": "157c5339-dae1-4d62-9095-4a8f1ea23035",
+      "name": "Hugging Face Blog"
+    },
+    {
+      "parameters": {
+        "numberInputs": 7
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        256,
+        -288
+      ],
+      "id": "ab3eb352-fc03-425a-bc3d-678eef0169c6",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "language": "pythonNative",
+        "pythonCode": "keywords = [\n \n    # Artificial Intelligence\n    \"ai\",\n    \"artificial intelligence\",\n    \"generative ai\",\n    \"machine learning\",\n    \"deep learning\",\n    \"neural network\",\n    \"computer vision\",\n \n    # LLM and AI Models\n    \"llm\",\n    \"large language model\",\n    \"language model\",\n    \"foundation model\",\n    \"openai\",\n    \"chatgpt\",\n    \"gpt\",\n    \"claude\",\n    \"gemini\",\n    \"reasoning model\",\n    \"multimodal\",\n \n    # AI Agents\n    \"ai agent\",\n    \"agents\",\n    \"agentic ai\",\n    \"automation\",\n    \"copilot\",\n \n    # Hardware\n    \"gpu\",\n    \"cpu\",\n    \"processor\",\n    \"chip\",\n    \"semiconductor\",\n    \"nvidia\",\n    \"amd\",\n    \"intel\",\n    \"memory\",\n    \"ram\",\n    \"hbm\",\n    \"datacenter\",\n \n    # Robotics\n    \"robot\",\n    \"robotics\",\n    \"humanoid\",\n    \"autonomous\",\n    \"self-driving\",\n \n    # Technology\n    \"technology\",\n    \"software\",\n    \"hardware\",\n    \"computing\",\n    \"cloud\",\n    \"cybersecurity\",\n    \"quantum computing\",\n    \"internet\",\n \n    # Innovation\n    \"innovation\",\n    \"invention\",\n    \"breakthrough\",\n    \"research\",\n    \"discovery\",\n    \"launch\",\n    \"released\",\n    \"introducing\",\n \n    # Developer Technology\n    \"python\",\n    \"programming\",\n    \"developer\",\n    \"api\",\n    \"open source\",\n    \"github\",\n \n    # Emerging Technology\n    \"virtual reality\",\n    \"augmented reality\",\n    \"vr\",\n    \"ar\",\n    \"blockchain\",\n    \"biotechnology\",\n    \"space technology\"\n]\n\nresult = []\n\nfor item in _items:\n\n    title = item[\"json\"].get(\"title\", \"\").lower()\n\n    for keyword in keywords:\n\n        if keyword in title:\n            result.append(item)\n            break\n\nreturn result"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        528,
+        -224
+      ],
+      "id": "484c917d-6f4a-4a3d-8a7c-c61b73aef6c7",
+      "name": "Keyword Filter"
+    },
+    {
+      "parameters": {
+        "language": "pythonNative",
+        "pythonCode": "result = []\n\nfor item in _items:\n\n    data = item[\"json\"]\n\n    clean_article = {\n        \"title\": data.get(\"title\", \"\"),\n        \"link\": data.get(\"link\", \"\"),\n        \"date\": data.get(\"isoDate\", \"\"),\n        \"source\": data.get(\"source\", \"Unknown\")\n    }\n\n    result.append({\n        \"json\": clean_article\n    })\n\nreturn result"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        752,
+        -224
+      ],
+      "id": "d5942559-c8df-4a5a-a7e6-8d27b1ee9994",
+      "name": "Clean Article Data"
+    },
+    {
+      "parameters": {
+        "language": "pythonNative",
+        "pythonCode": "articles = []\n\nfor item in _items:\n    articles.append(item)\n\narticles.sort(\n    key=lambda item: item[\"json\"].get(\"date\", \"\"),\n    reverse=True\n)\n\nreturn articles"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        992,
+        -224
+      ],
+      "id": "29adc75b-5342-4572-8aaf-1bfe2e696994",
+      "name": "Sort by Date"
+    },
+    {
+      "parameters": {
+        "language": "pythonNative",
+        "pythonCode": "keywords = {\n    # High-value events\n    \"launch\": 3,\n    \"release\": 3,\n    \"released\": 3,\n    \"unveil\": 3,\n    \"announce\": 2,\n\n    \"acquisition\": 4,\n    \"acquire\": 4,\n    \"merger\": 4,\n    \"funding\": 3,\n    \"raises\": 3,\n\n    \"billion\": 3,\n    \"million\": 1,\n\n    # Companies\n    \"openai\": 4,\n    \"anthropic\": 4,\n    \"google\": 2,\n    \"nvidia\": 4,\n    \"microsoft\": 2,\n    \"meta\": 2,\n    \"amazon\": 2,\n    \"apple\": 2,\n    \"deepmind\": 3,\n    \"huggingface\": 2,\n\n    # Topics\n    \"gpu\": 3,\n    \"chip\": 3,\n    \"semiconductor\": 3,\n    \"model\": 2,\n    \"llm\": 3,\n    \"data center\": 3,\n    \"datacenter\": 3,\n    \"robot\": 2,\n    \"research\": 2,\n    \"breakthrough\": 3,\n    \"layoff\": 3,\n    \"ipo\": 3,\n\n    # Negative signals\n    \"sponsored\": -5,\n    \"advertisement\": -5,\n    \"webinar\": -3,\n    \"opinion\": -2\n}\n\n\nresult = []\n\nfor item in _items:\n\n    article = item[\"json\"]\n\n    title = article.get(\"title\", \"\").lower()\n\n    score = 0\n\n    for keyword, weight in keywords.items():\n\n        if keyword in title:\n            score += weight\n\n    article[\"score\"] = score\n\n    if score > 0:\n        result.append(item)\n\n\nresult.sort(\n    key=lambda item: item[\"json\"][\"score\"],\n    reverse=True\n)\n\n\nreturn result"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1216,
+        -224
+      ],
+      "id": "735cec15-c8bb-4f58-b7e7-b46e57584ae4",
+      "name": "Score & Rank Articles ⭐"
+    },
+    {
+      "parameters": {
+        "language": "pythonNative",
+        "pythonCode": "seen = set()\nresult = []\n\nfor item in _items:\n\n    title = item[\"json\"].get(\"title\", \"\").lower().strip()\n\n    if title not in seen:\n        seen.add(title)\n        result.append(item)\n\nreturn result[:100]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1440,
+        -224
+      ],
+      "id": "c71b56a8-b909-4582-8c34-92af70f90968",
+      "name": "Remove Duplicates & Select Top Articles"
+    },
+    {
+      "parameters": {
+        "language": "pythonNative",
+        "pythonCode": "articles = []\n\nfor item in _items:\n\n    data = item[\"json\"]\n\n    article = (\n        \"Title: \" + data.get(\"title\", \"\") + \"\\n\" +\n        \"Date: \" + data.get(\"date\", \"\") + \"\\n\" +\n        \"Score: \" + str(data.get(\"score\", 0)) + \"\\n\" +\n        \"Link: \" + data.get(\"link\", \"\") + \"\\n\"\n    )\n\n    articles.append(article)\n\nreturn [\n    {\n        \"json\": {\n            \"articles\": \"\\n---\\n\".join(articles)\n        }\n    }\n]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1664,
+        -224
+      ],
+      "id": "c1738929-260d-44d4-8a00-ec586413017e",
+      "name": "Prepare Articles for AI 🤖"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        1872,
+        0
+      ],
+      "id": "817de0c1-ba3e-478c-9087-4577106a671d",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "RSlOHlv75qCQW3CK",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        2272,
+        32
+      ],
+      "id": "a47b043d-ce7b-4a36-a8a2-5bac40cca1f0",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "RSlOHlv75qCQW3CK",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert AI and technology news analyst.\n\nAnalyze the technology news articles provided below.\n\nYour task:\n\n1. Identify the most important and significant stories.\n2. Remove stories that are duplicates or about the same event.\n3. Prioritize major developments involving:\n   - Artificial Intelligence\n   - LLMs and AI models\n   - OpenAI, Anthropic, Google, NVIDIA, Microsoft, Meta\n   - GPUs, AI chips, semiconductors and data centers\n   - Robotics and autonomous technology\n   - Important technology breakthroughs and inventions\n   - Major acquisitions, partnerships and funding\n\nSelect the 10 most important stories.\n\nFor each story provide:\n\n1. Headline\n2. Short summary (2-3 sentences)\n3. Why it matters\n4. Source link\n\nUse simple and clear language.\n\nHere are the articles:\n\n{{ $json.articles }}",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        1888,
+        -224
+      ],
+      "id": "da07ab9d-9ee4-453e-833c-88c69fecf580",
+      "name": "AI News Analyst"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI Technology News Analyst.\n\nBelow is a collection of recent technology and AI news articles.\n\nYour task is to analyze all the articles and create a concise, high-quality AI news briefing.\n\nInstructions:\n\n1. Identify the most important and impactful news.\n2. Remove repeated stories covering the same event.\n3. Prioritize major developments involving:\n   - AI models and research\n   - OpenAI\n   - Google / DeepMind\n   - Anthropic\n   - NVIDIA\n   - Microsoft\n   - Meta\n   - AI chips and GPUs\n   - Major AI funding, acquisitions, partnerships, and launches\n\n4. Select the 10 most important stories.\n\nFor each story provide:\n\nHeadline:\nA short explanation of why it matters:\nSource link:\n\nMake the output easy to read.\n\nDo not invent information.\nOnly use the articles provided below.\n\nNEWS BRIEFING:\n{{ $json.text }}",
+        "messages": {
+          "messageValues": []
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        2256,
+        -224
+      ],
+      "id": "b42356c1-f466-4e03-b574-19f795dedab4",
+      "name": "AI News Summarizer & Formatter"
+    },
+    {
+      "parameters": {
+        "jsCode": "const news = $json.text || '';\n\n// Escape HTML to avoid broken HTML\nfunction escapeHtml(text) {\n  return text\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;');\n}\n\n// Convert Markdown links [text](url) into HTML links\nfunction convertLinks(text) {\n  return text.replace(\n    /\\[([^\\]]+)\\]\\((https?:\\/\\/[^\\s)]+)\\)/g,\n    '<a href=\"$2\" target=\"_blank\" style=\"color:#2563eb;text-decoration:none;font-weight:bold;\">$1</a>'\n  );\n}\n\n// Split AI response into individual news stories\nconst stories = news\n  .split(/###\\s*\\d+\\.\\s*/)\n  .filter(story => story.trim());\n\n// Generate HTML cards\nconst newsCards = stories.map((story, index) => {\n\n  let formattedStory = escapeHtml(story.trim());\n\n  // Restore markdown links\n  formattedStory = convertLinks(formattedStory);\n\n  // Bold markdown text\n  formattedStory = formattedStory.replace(\n    /\\*\\*(.*?)\\*\\*/g,\n    '<strong>$1</strong>'\n  );\n\n  // Convert line breaks\n  formattedStory = formattedStory.replace(/\\n/g, '<br>');\n\n  return `\n    <div style=\"\n      background:#ffffff;\n      border-radius:12px;\n      padding:22px;\n      margin-bottom:18px;\n      border:1px solid #e5e7eb;\n      box-shadow:0 2px 6px rgba(0,0,0,0.05);\n    \">\n      \n      <div style=\"\n        display:inline-block;\n        background:#eef2ff;\n        color:#4f46e5;\n        padding:6px 12px;\n        border-radius:20px;\n        font-size:13px;\n        font-weight:bold;\n        margin-bottom:12px;\n      \">\n        AI NEWS #${index + 1}\n      </div>\n\n      <div style=\"\n        font-size:16px;\n        line-height:1.7;\n        color:#374151;\n      \">\n        ${formattedStory}\n      </div>\n\n    </div>\n  `;\n}).join('');\n\n// Final Email Dashboard\nconst html = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n</head>\n\n<body style=\"\n  margin:0;\n  padding:0;\n  background:#f3f4f6;\n  font-family:Arial, Helvetica, sans-serif;\n\">\n\n  <div style=\"\n    max-width:800px;\n    margin:0 auto;\n    padding:30px 15px;\n  \">\n\n    <!-- Header -->\n    <div style=\"\n      background:linear-gradient(135deg,#111827,#312e81);\n      color:white;\n      padding:35px;\n      border-radius:16px;\n      margin-bottom:25px;\n      text-align:center;\n    \">\n      \n      <h1 style=\"\n        margin:0;\n        font-size:30px;\n      \">\n        🤖 AI News Briefing\n      </h1>\n\n      <p style=\"\n        margin:12px 0 0;\n        color:#d1d5db;\n        font-size:16px;\n      \">\n        Today's Most Important AI Developments\n      </p>\n\n    </div>\n\n    <!-- News Cards -->\n    ${newsCards}\n\n    <!-- Footer -->\n    <div style=\"\n      text-align:center;\n      padding:25px;\n      color:#6b7280;\n      font-size:13px;\n    \">\n      Generated automatically by your AI News Agent 🤖\n    </div>\n\n  </div>\n\n</body>\n</html>\n`;\n\nreturn [\n  {\n    json: {\n      html: html\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2624,
+        -224
+      ],
+      "id": "c20c0482-6e8a-44bf-bb7a-e353e86b2f08",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "sendTo": "varunilla15@gmail.com",
+        "subject": "=🤖 AI News Briefing - {{ $now.format('dd MMM yyyy') }}",
+        "message": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2816,
+        -224
+      ],
+      "id": "4be3f423-c0b3-41e5-b315-d334c4a41f06",
+      "name": "Send a message",
+      "webhookId": "72c22f7f-1586-49ac-8009-bb7dc0740985",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "pDutEz0wokVC2D1s",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "TechCrunch",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "The Verge — AI",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "MIT Technology Review — AI",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Ars Technica",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "OpenAI News",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google AI Blog",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Hugging Face Blog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "The Verge — AI": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TechCrunch": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "MIT Technology Review — AI": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Hugging Face Blog": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Ars Technica": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "OpenAI News": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "Google AI Blog": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 6
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Keyword Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keyword Filter": {
+      "main": [
+        [
+          {
+            "node": "Clean Article Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Article Data": {
+      "main": [
+        [
+          {
+            "node": "Sort by Date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sort by Date": {
+      "main": [
+        [
+          {
+            "node": "Score & Rank Articles ⭐",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Score & Rank Articles ⭐": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates & Select Top Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates & Select Top Articles": {
+      "main": [
+        [
+          {
+            "node": "Prepare Articles for AI 🤖",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Articles for AI 🤖": {
+      "main": [
+        [
+          {
+            "node": "AI News Analyst",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI News Analyst",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI News Summarizer & Formatter",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI News Analyst": {
+      "main": [
+        [
+          {
+            "node": "AI News Summarizer & Formatter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI News Summarizer & Formatter": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "e89c3f01-ff36-4786-b4d6-65ff9a44148f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3ce83380e19f35061591952f8cf5a3d8df78b60d9ca833d4acafcaaa5b345808"
+  },
+  "nodeGroups": [],
+  "id": "wfCZY5dZqoY9TS9o",
+  "tags": []
+}
